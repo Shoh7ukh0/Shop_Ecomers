@@ -1,0 +1,27 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Log-in{% endblock %}
+
+<section class="login footer-padding">
+    <div class="container">
+        <div class="login-section">
+            <div class="review-form">
+                <h5 class="comment-title">Log In</h5>
+                <div class="review-inner-form ">
+                    <form method="post">
+                        {{ form.as_p }}
+                        {% csrf_token %}
+                        <p><input type="submit" value="Log in"></p>
+                    </form>
+                <div class="login-btn text-center">
+                    <a href="#" class="shop-btn">Log In</a>
+                    <span class="shop-account">Dont't have an account ?
+                        <a href="{% url 'accounts:register' %}">Sign Up
+                            Free
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

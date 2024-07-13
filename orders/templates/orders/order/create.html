@@ -1,0 +1,160 @@
+{% extends "shop/base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Checkout" %}
+{% endblock %}
+{% block content %}
+    <!-- <h1>{% trans "Checkout" %}</h1>
+    <div class="order-info">
+        <h3>{% trans "Your order" %}</h3>
+        <ul>
+            {% for item in cart %}
+                <li>
+                    {{ item.quantity }}x {{ item.product.name }}
+                    <span>${{ item.total_price }}</span>
+                </li>
+            {% endfor %}
+            {% if cart.coupon %}
+                <li>
+                    {% blocktrans with code=cart.coupon.code discount=cart.coupon.discount %}
+                        "{{ code }}" ({{ discount }}% off)
+                    {% endblocktrans %}
+                    <span class="neg">- ${{ cart.get_discount|floatformat:2 }}</span>
+                </li>
+            {% endif %}
+        </ul>
+        <p>{% trans "Total" %}: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
+    </div>
+    <form method="post" class="order-form">
+        {{ form.as_p }}
+        <p><input type="submit" value="{% trans "Place order" %}"></p>
+        {% csrf_token %}
+    </form> -->
+
+    <section class="blog about-blog">
+        <div class="container">
+            <div class="blog-bradcrum">
+                <span><a href="index.html">Home</a></span>
+                <span class="devider">/</span>
+                <span><a href="#">Checkout</a></span>
+            </div>
+            <div class="blog-heading about-heading">
+                <h1 class="heading">Checkout</h1>
+            </div>
+        </div>
+    </section>
+    
+    
+    <section class="checkout product footer-padding">
+        <div class="container">
+            <div class="checkout-section">
+                <div class="row gy-5">
+                    <div class="col-lg-6">
+                        <div class="checkout-wrapper">
+                            <a href="login.html" class="shop-btn">Log into Your Account</a>
+                                <div class="account-section billing-section">
+                                    <h5 class="wrapper-heading">Billing Details</h5>
+                                    <div class="review-form">
+                                        <form method="post" class="order-form">
+                                            {{ form.as_p }} <br>
+                                            <p><input class="shop-btn" type="submit" style="background-color: #AE1C9A; border-radius: 5px; border: none; color: #fff; margin: auto;" value="{% trans "Place order" %}"></p>
+                                            {% csrf_token %}
+                                        </form>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="checkout-wrapper">
+                            <a href="#" class="shop-btn">Enter Coupon Code</a>
+                            <div class="account-section billing-section">
+                                <h5 class="wrapper-heading">Order Summary</h5>
+                                <div class="order-summery">
+                                    <div class="subtotal product-total">
+                                        <h5 class="wrapper-heading">PRODUCT</h5>
+                                        <h5 class="wrapper-heading">TOTAL</h5>
+                                    </div>
+                                    <hr>
+                                    <div class="subtotal product-total">
+                                        <ul class="product-list">
+                                            {% for item in cart %}
+                                            <li>
+                                                <div class="product-info">
+                                                    <h5 class="wrapper-heading">{{ item.product.name }} X{{ item.quantity }}</h5>
+                                                    <p class="paragraph">{{ item.product.description|linebreaks }}</p>
+                                                </div>
+                                                <div class="price">
+                                                    <h5 class="wrapper-heading">${{ item.total_price }}</h5>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="subtotal product-total">
+                                        <h5 class="wrapper-heading">SUBTOTAL</h5>
+                                        <h5 class="wrapper-heading">$365</h5>
+                                    </div>
+                                    <div class="subtotal product-total">
+                                        <ul class="product-list">
+                                            <li>
+                                                <div class="product-info">
+                                                    <p class="paragraph">SHIPPING</p>
+                                                    <h5 class="wrapper-heading">Free Shipping</h5>
+                                                </div>
+                                                <div class="price">
+                                                    <h5 class="wrapper-heading">+$0</h5>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    {% if cart.coupon %}
+                                    <div class="subtotal total">
+                                        <h5 class="wrapper-heading">TOTAL</h5>
+                                        <p style="background-color: #AE1C9A; padding: 2px 5px; color: #fff;">{% blocktrans with code=cart.coupon.code discount=cart.coupon.discount %}
+                                            "{{ code }}" ({{ discount }}% off)
+                                        {% endblocktrans %}</p>
+                                        <h5 class="wrapper-heading price">${{ cart.get_discount|floatformat:2 }}</h5>
+                                    </div>
+                                    {% endif %}
+                                    <hr>
+                                    <div class="subtotal total">
+                                        <h5 class="wrapper-heading">TOTAL</h5>
+                                        <h5 class="wrapper-heading price">${{ cart.get_total_price_after_discount|floatformat:2 }}</h5>
+                                    </div>
+                                    <div class="subtotal payment-type">
+                                        <div class="checkbox-item">
+                                            <input type="radio" id="bank" name="bank">
+                                            <div class="bank">
+                                                <h5 class="wrapper-heading">Direct Bank Transfer</h5>
+                                                <p class="paragraph">Make your payment directly into our bank account.
+                                                    Please use
+                                                    <span class="inner-text">
+                                                    your Order ID as the payment reference.
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="radio" id="cash" name="bank">
+                                            <div class="cash">
+                                                <h5 class="wrapper-heading">Cash on Delivery</h5>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="radio" id="credit" name="bank">
+                                            <div class="credit">
+                                                <h5 class="wrapper-heading">Credit/Debit Cards or Paypal</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

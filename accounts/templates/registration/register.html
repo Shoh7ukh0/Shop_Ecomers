@@ -1,0 +1,36 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+    <section class="login account footer-padding">
+        <div class="container">
+            <div class="login-section account-section">
+                <div class="review-form">
+                    <h5 class="comment-title">Create Account</h5>
+                    <div class=" account-inner-form">
+                        
+                        <form method="post">
+                            <div class="review-form-name">
+                                {{ user_form.as_p }}
+                            </div>
+                            {% csrf_token %}
+
+                            <div class="review-form-name checkbox">
+                                <div class="checkbox-item">
+                                    <input type="checkbox">
+                                    <p class="remember">
+                                    I agree all terms and condition in <span class="inner-text">ShopUs.</span></p>
+                                </div>
+                            </div>
+                            <p><input class="shop-btn" style="border: none;" type="submit" value="Create my account"></p>
+                        </form>
+                    </div>
+                    <div class="login-btn text-center">
+                        <span class="shop-account">Already have an account ?<a href="login.html">Log In</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

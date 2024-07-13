@@ -1,0 +1,53 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Log-in{% endblock %}
+
+{% block content %}
+<section class="login footer-padding">
+    <div class="container">
+        <div class="login-section">
+            <div class="review-form">
+                <h5 class="comment-title">Log In</h5>
+                {% if form.errors %}
+                    <p class="comment-title">
+                        Your username and password didn't match.
+                        Please try again.
+                    </p>
+                {% else %}
+                    <p class="comment-title">Please, use the following form to log-in</p>
+                {% endif %}
+                <div class="review-inner-form ">
+                    <form action="{% url 'accounts:login' %}" method="post">
+                        <div class="review-form-name">
+                            {{ form.username }}
+                        </div>
+                        <div class="review-form-name">
+                            {{ form.password }}
+                        </div>
+                        {% csrf_token %}
+                        
+                        <div class="review-form-name checkbox">
+                            <div class="checkbox-item">
+                                <input type="checkbox">
+                                <span class="address">
+                                Remember Me</span>
+                            </div>
+                            <div class="address">
+                                <a style="font-weight: 700;" href="{% url 'accounts:password_reset' %}">Forgot password?</a>
+                            </div>
+                        </div>
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        <p><input class="shop-btn" style="border: none;" type="submit" value="Log in"></p>
+                    </form>
+                <div class="login-btn text-center">
+                    <span class="shop-account">Dont't have an account ?
+                        <a href="{% url 'accounts:register' %}">Sign Up
+                            Free
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
