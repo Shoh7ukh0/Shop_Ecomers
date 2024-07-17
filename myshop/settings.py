@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rosetta',
     'parler',
     'localflavor',
+    'easy_thumbnails'
 ]
 
 MIDDLEWARE = [
