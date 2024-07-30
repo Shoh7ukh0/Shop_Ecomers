@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Category, Product, Size_product
+from .models import Category, Product, Size_product, Info_module
 from cart.forms import CartAddProductForm
 from .recommender import Recommender
 
@@ -28,11 +28,17 @@ def product_detail(request, id, slug):
     recommended_products = r.suggest_products_for([product], 4)
     size = Size_product.objects.all()
     modules = product.modules.all()
-    # info = product.info.all()
 
-    return render(request, 'shop/product/detail.html', 
-                  {'product': product, 'modules': modules,
-                   'cart_product_form': cart_product_form, 
-                   'size': size,
-                   'recommended_products': recommended_products})
+    # Check if the product has an info_module
+    info_module = Info_module.objects.first()
 
+    context = {
+        'product': product,
+        'modules': modules,
+        'cart_product_form': cart_product_form,
+        'size': size,
+        'info_module': info_module,
+        'recommended_products': recommended_products,
+    }
+
+    return render(request, 'shop/product/detail.html', context)

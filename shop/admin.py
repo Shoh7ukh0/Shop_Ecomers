@@ -2,13 +2,13 @@ from django.contrib import admin
 from .models import Category, Product, Module, Size_product, Info, Info_module
 from parler.admin import TranslatableAdmin
 
-class ModuleInline(admin.StackedInline):
+class Info_moduleInline(admin.StackedInline):
     model = Info_module
 
 @admin.register(Info)
 class InfoAdmin(TranslatableAdmin):
     list_display = ['name']
-    inlines = [ModuleInline]
+    inlines = [Info_moduleInline]
 
 @admin.register(Size_product)
 class SizeAdmin(TranslatableAdmin):
@@ -29,10 +29,10 @@ class ModuleInline(admin.StackedInline):
 
 @admin.register(Product)
 class ProductAdmin(TranslatableAdmin):
-    list_display = ['name', 'slug', 'price',
+    list_display = ['name', 'slug', 'unit_price', 'price',
                     'available', 'created', 'updated'
                 ]
-    list_filter = ['available', 'created', 'updated']
+    list_filter = ['available', 'stock', 'created', 'updated']
     list_editable = ['price', 'available']
     inlines = [ModuleInline]
 
