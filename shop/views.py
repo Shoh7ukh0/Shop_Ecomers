@@ -28,6 +28,7 @@ def product_detail(request, id, slug):
     recommended_products = r.suggest_products_for([product], 4)
     size = Size_product.objects.all()
     modules = product.modules.all()
+    # info = product.info.all()
 
     return render(request, 'shop/product/detail.html', 
                   {'product': product, 'modules': modules,

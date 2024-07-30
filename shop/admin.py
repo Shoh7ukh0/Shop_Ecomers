@@ -1,12 +1,21 @@
 from django.contrib import admin
-from .models import Category, Product, Module, Size_product
+from .models import Category, Product, Module, Size_product, Info, Info_module
 from parler.admin import TranslatableAdmin
 
-# Register your models here.
+class ModuleInline(admin.StackedInline):
+    model = Info_module
+
+@admin.register(Info)
+class InfoAdmin(TranslatableAdmin):
+    list_display = ['name']
+    inlines = [ModuleInline]
 
 @admin.register(Size_product)
 class SizeAdmin(TranslatableAdmin):
     list_display = ['name', 'slug']
+
+    def get_prepopulated_fields(self, request, obj=None):
+        return {'slug': ('name',)}
 
 @admin.register(Category)
 class CategoryAdmin(TranslatableAdmin):
