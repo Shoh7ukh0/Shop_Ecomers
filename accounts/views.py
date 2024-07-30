@@ -1,12 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, UserRegistrationForm, \
                     UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
-from orders.models import Order, Delivery, SupportTicket
+from orders.models import Order, SupportTicket
 from django.contrib.auth import get_user_model
+from orders.forms import SupportTicketForm
 
 
 User = get_user_model()
@@ -34,15 +35,32 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
+    profile = get_object_or_404(Profile, user=request.user)
+
     if request.method == 'POST':
         user_form = UserEditForm(instance=request.user, data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
-        if user_form.is_valid() and profile_form.is_valid():
+        ticket_form = SupportTicketForm(data=request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid() and ticket_form.is_valid():
             user_form.save()
             profile_form.save()
+
+            # Save the Support Ticket and release the product
+            support_ticket = ticket_form.save(commit=False)
+            support_ticket.user = request.user
+            support_ticket.save()
+
+            product = support_ticket.product
+            product.is_released = True
+            product.profile = profile
+            product.save()
+
+            return redirect('dashboard')
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
+        ticket_form = SupportTicketForm()
 
     # Retrieve counts
     new_orders_count = Order.objects.filter(user=request.user, status=Order.Status.PENDING).count()
@@ -50,9 +68,11 @@ def dashboard(request):
     support_tickets_count = SupportTicket.objects.filter(user=request.user).count()
 
     return render(request, 'account/dashboard.html', {
+        'profile': profile,
         'section': 'dashboard',
         'user_form': user_form,
         'profile_form': profile_form,
+        'ticket_form': ticket_form,
         'new_orders_count': new_orders_count,
         'delivered_orders_count': delivered_orders_count,
         'support_tickets_count': support_tickets_count,
