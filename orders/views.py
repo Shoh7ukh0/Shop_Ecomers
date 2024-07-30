@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from cart.cart import Cart
@@ -10,29 +11,37 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 import weasyprint
 
+@login_required
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
+            order.user = request.user  # Assign the user to the order
             if cart.coupon:
                 order.coupon = cart.coupon
                 order.discount = cart.coupon.discount
             order.save()
             for item in cart:
-                OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
-                # Chiqindini bo'shatish
-                cart.clear()
-                # запустить асинхронное задание
-                order_created.delay(order.id)
-                # задать заказ в сеансе
-                request.session['order_id'] = order.id
-                # перенаправить к платежу
-                return redirect(reverse('payment:process'))
+                OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    price=item['price'],
+                    quantity=item['quantity']
+                )
+            # Clear the cart
+            cart.clear()
+            # Launch asynchronous task
+            order_created.delay(order.id)
+            # Set the order in the session
+            request.session['order_id'] = order.id
+            # Redirect to payment
+            return redirect(reverse('payment:process'))
     else:
         form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'cart': cart, 'form': form})
+
 
 @staff_member_required
 def admin_order_detail(request, order_id):

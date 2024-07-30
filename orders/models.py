@@ -1,5 +1,6 @@
 from django.db import models
-from myshop import settings
+# from myshop import settings
+from django.conf import settings
 from shop.models import Product
 from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -7,6 +8,13 @@ from coupons.models import Coupon
 from django.utils.translation import gettext_lazy as _
 
 class Order(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', _('Pending')
+        COMPLETED = 'completed', _('Completed')
+        DELIVERED = 'delivered', _('Delivered')
+        CANCELLED = 'cancelled', _('Cancelled')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_id = models.CharField(max_length=250, blank=True)
     first_name = models.CharField(_('first name'), max_length=50)
     last_name = models.CharField(_('last name'), max_length=50)
@@ -16,6 +24,7 @@ class Order(models.Model):
     city = models.CharField(_('city'), max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     paid = models.BooleanField(default=False)
     coupon = models.ForeignKey(Coupon, related_name='orders', null=True, blank=True, on_delete=models.SET_NULL)
     discount = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -65,3 +74,29 @@ class OrderItem(models.Model):
     
     def get_cost(self):
         return self.price * self.quantity
+    
+class Delivery(models.Model):
+    class Status(models.TextChoices):
+        IN_TRANSIT = 'in_transit', _('In Transit')
+        DELIVERED = 'delivered', _('Delivered')
+        RETURNED = 'returned', _('Returned')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.IN_TRANSIT)
+    delivered_at = models.DateTimeField()
+
+    def __str__(self):
+        return f'Delivery {self.id}'
+
+class SupportTicket(models.Model):
+    class Status(models.TextChoices):
+        OPEN = 'open', _('Open')
+        CLOSED = 'closed', _('Closed')
+        IN_PROGRESS = 'in_progress', _('In Progress')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.OPEN)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Support Ticket {self.id}'

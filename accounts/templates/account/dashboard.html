@@ -194,7 +194,7 @@
                                                 </div>
                                                 <div class="wrapper-content">
                                                     <p class="paragraph">New Orders</p>
-                                                    <h3 class="heading">656</h3>
+                                                    <h3 class="heading">{{ new_orders_count }}</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,11 +210,11 @@
                                             </div>
                                                 <div class="wrapper-content">
                                                     <p class="paragraph">Delivery Completed</p>
-                                                    <h3 class="heading">99783</h3>
+                                                    <h3 class="heading">{{ delivered_orders_count }}</h3>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4 col-sm-6">
+                                        <div class="col-lg-4 col-sm-6"> 
                                             <div class="product-wrapper">
                                                 <div class="wrapper-img">
                                                     <span>
@@ -228,7 +228,7 @@
                                                 </div>
                                                 <div class="wrapper-content">
                                                     <p class="paragraph">Support Tickets</p>
-                                                    <h3 class="heading">09</h3>
+                                                    <h3 class="heading">{{ support_tickets_count }}</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -269,7 +269,7 @@
                                                         <div class="info-details">
                                                             <p>ShopUs Super-Shop</p>
                                                             <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d0908000208000c04012d0a000c0401430e0200">[email&#160;protected]</a></p>
-                                                            <p>023 434 54354</p>
+                                                            <p>{{ profile.phone_number }}</p>
                                                             <p>Haydarabad, Rord 34</p>
                                                             <p>3454</p>
                                                         </div>

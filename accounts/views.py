@@ -5,6 +5,11 @@ from .forms import LoginForm, UserRegistrationForm, \
                     UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
+from orders.models import Order, Delivery, SupportTicket
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 def user_login(request):
     if request.method == 'POST':
@@ -26,21 +31,32 @@ def user_login(request):
             form = LoginForm()
         return render(request, 'account/login.html', {'form': form})
     
+
 @login_required
 def dashboard(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    
     if request.method == 'POST':
         user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=profile, data=request.POST, files=request.FILES)
+        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
     else:
         user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(instance=profile)
+        profile_form = ProfileEditForm(instance=request.user.profile)
 
-    return render(request, 'account/dashboard.html', {'section': 'dashboard', 'user_form': user_form, 'profile_form': profile_form, 'profile': profile})
+    # Retrieve counts
+    new_orders_count = Order.objects.filter(user=request.user, status=Order.Status.PENDING).count()
+    delivered_orders_count = Order.objects.filter(user=request.user, status=Order.Status.DELIVERED).count()
+    support_tickets_count = SupportTicket.objects.filter(user=request.user).count()
+
+    return render(request, 'account/dashboard.html', {
+        'section': 'dashboard',
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'new_orders_count': new_orders_count,
+        'delivered_orders_count': delivered_orders_count,
+        'support_tickets_count': support_tickets_count,
+    })
 
 def register(request):
     if request.method == 'POST':

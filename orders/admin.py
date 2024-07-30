@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Delivery, SupportTicket
 
 
 def export_to_csv(modeladmin, request, queryset):
@@ -63,3 +63,14 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
+
+
+@admin.register(Delivery)
+class DeliveryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'status', 'delivered_at']
+    list_filter = ['status', 'delivered_at']
+
+@admin.register(SupportTicket)
+class SupportTicketAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
