@@ -689,35 +689,6 @@
                         </div>
                         <div class="tab-pane fade" id="v-pills-ticket" role="tabpanel" aria-labelledby="v-pills-ticket-tab" tabindex="0">
                             <div class="support-ticket">
-                                <a href="#" class="shop-btn" onclick="modalAction('.ticket')">Add New Support</a>
-
-                                <div class="modal-wrapper ticket">
-                                    <div onclick="modalAction('.ticket')" class="anywhere-away"></div>
-
-                                    <div class="login-section account-section modal-main">
-                                        <div class="review-form">
-                                            <div class="review-content">
-                                                <h5 class="comment-title">Add New Ticket</h5>
-                                                <div class="close-btn">
-                                                    <img src="./assets/images/homepage-one/close-btn.png" onclick="modalAction('.ticket')" alt="close-btn">
-                                                </div>
-                                            </div>
-                                            <form method="post" enctype="multipart/form-data">
-                                                {% csrf_token %}
-                                                {{ user_form.as_p }}
-                                                {{ profile_form.as_p }}
-                                                {{ ticket_form.as_p }}
-                                                <button type="submit">Submit</button>
-                                            </form>
-                                            
-                                            <div class="login-btn text-center">
-                                                <a href="#" onclick="modalAction('.ticket')" class="shop-btn">Add Ticekt
-                                                Now</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
                                 <div class="ticket-section">
                                     <table>
                                         <tbody>
