@@ -58,8 +58,8 @@
                             <span class="text">6 Reviews</span>
                         </div>
                         <div class="price">
-                            <span class="price-cut">$50 .99</span>
-                            <span class="new-price">${{ product.price }}</span>
+                            <span class="price-cut">{{ product.unit_price }} {{ product.currency }}</span>
+                            <span class="new-price">{{ product.price }} {{ product.currency }}</span>
                         </div>
                         <hr>
                         <div class="description">

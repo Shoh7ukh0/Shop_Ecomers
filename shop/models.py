@@ -40,6 +40,12 @@ class Product(TranslatableModel):
         slug = models.SlugField(max_length=200),
         description = models.TextField(blank=True),
     )
+
+    class Status(models.TextChoices):
+        SOM = "so'm", 'Uz'
+        RUBL = 'rubl', 'Ru'
+        DOLLAR = 'dollar', 'Amr'
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     is_released = models.BooleanField(default=False)
@@ -52,6 +58,7 @@ class Product(TranslatableModel):
     image_5 = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     image_6 = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     image_7 = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    currency = models.CharField(choices=Status.choices, max_length=10, default=Status.SOM, null=True, blank=True)
     unit_price = models.CharField(max_length=25)
     price = models.CharField(max_length=25)
     stock = models.IntegerField()
